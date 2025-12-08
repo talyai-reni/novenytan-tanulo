@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NövényTanuló Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    
+    <nav class="navbar">
+        <div class="logo"><i class="fas fa-leaf"></i> NövényTanuló</div>
+        
+        <div class="nav-controls">
+            <select id="category-select" onchange="changeCategory()"></select>
+            
+            <button class="btn-icon" onclick="addNewCategory()" title="Új mappa">
+                <i class="fas fa-folder-plus"></i>
+            </button>
+            
+            <button class="btn-secondary" onclick="toggleEditor()">
+                <i class="fas fa-pen"></i> Szerkesztés
+            </button>
+
+            <button class="btn-icon theme-toggle" onclick="toggleTheme()" title="Téma váltása">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        
+        <div class="mode-tabs">
+            <button class="tab active" onclick="startMode('flashcard', this)">Kártyák</button>
+            <button class="tab" onclick="startMode('choice', this)">Feleletválasztós</button>
+            <button class="tab" onclick="startMode('typing', this)">Írás</button>
+        </div>
+
+        <div class="progress-info">
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0 / 0</div>
+        </div>
+
+        <main id="game-area">
+            </main>
+
+        <div id="editor-overlay" class="overlay hidden">
+            <div class="editor-modal">
+                <div class="editor-header">
+                    <h2><i class="fas fa-edit"></i> Kártyák kezelése: <span id="current-cat-name"></span></h2>
+                    <button onclick="toggleEditor()" class="close-btn">&times;</button>
+                </div>
+                
+                <div class="editor-body">
+                    <div class="add-card-box">
+                        <h3>Új kártya hozzáadása</h3>
+                        <div class="input-row">
+                            <input type="text" id="new-front-text" placeholder="Kártya eleje (pl. Kérdés)">
+                            <input type="text" id="new-front-img" placeholder="Kép URL (pl. https://... vagy kep.jpg)">
+                        </div>
+                        <div class="input-row">
+                            <input type="text" id="new-back-text" placeholder="Kártya hátulja (pl. Válasz)">
+                            <input type="text" id="new-back-img" placeholder="Kép URL (opcionális)">
+                        </div>
+                        <button class="btn-primary full-width" onclick="saveNewCard()">Mentés a listához</button>
+                    </div>
+
+                    <h3>Meglévő kártyák</h3>
+                    <div id="card-list" class="card-list"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
