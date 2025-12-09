@@ -1,6 +1,9 @@
-// --- 1. ADATOK ÉS TÉMA ---
-const defaultData = {
-    "Növénytan (Példa)": [
+// --- 1. ADATOK ÉS TÉMA INICIALIZÁLÁS ---
+
+const defaultData = 
+{
+    "Növénytan (Példa)": 
+    [
         { frontText: "Mi ez a virág?", frontImg: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Galanthus_nivalis.jpg/320px-Galanthus_nivalis.jpg", backText: "Hóvirág", backImg: "" },
         { frontText: "Mi ez a növény?", frontImg: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Papaver_rhoeas_ssp_rhoeas001.jpg/320px-Papaver_rhoeas_ssp_rhoeas001.jpg", backText: "Pipacs", backImg: "" }
     ]
@@ -13,33 +16,57 @@ let currentMode = 'flashcard';
 const gameArea = document.getElementById('game-area');
 const categorySelect = document.getElementById('category-select');
 
-// Téma betöltése
-if (localStorage.getItem('theme') === 'dark') {
+// Téma betöltése induláskor
+if (localStorage.getItem('theme') === 'dark') 
+{
     document.body.setAttribute('data-theme', 'dark');
     document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
 }
 
 // --- 2. FŐ FUNKCIÓK ---
+
 initCategories();
 startMode('flashcard', document.querySelector('.tab.active'));
 
-function toggleTheme() {
+// Téma váltás funkció
+function toggleTheme() 
+{
     const body = document.body;
     const icon = document.getElementById('theme-icon');
-    if (body.hasAttribute('data-theme')) {
+    if (body.hasAttribute('data-theme')) 
+    {
         body.removeAttribute('data-theme');
         icon.classList.replace('fa-sun', 'fa-moon');
         localStorage.setItem('theme', 'light');
-    } else {
+    } 
+    else 
+    {
         body.setAttribute('data-theme', 'dark');
         icon.classList.replace('fa-moon', 'fa-sun');
         localStorage.setItem('theme', 'dark');
     }
 }
 
-function initCategories() {
+// Billentyűzet kezelés
+document.addEventListener('keydown', (e) => 
+{
+    if (document.querySelector('.overlay:not(.hidden)')) return;
+    if (e.code === 'Space' && currentMode === 'flashcard') 
+    {
+        e.preventDefault();
+        const card = document.querySelector('.card');
+        if (card) card.classList.toggle('is-flipped');
+    }
+    if (e.code === 'ArrowRight') nextCard();
+    if (e.code === 'ArrowLeft') prevCard();
+});
+
+// Kategória kezelés
+function initCategories() 
+{
     categorySelect.innerHTML = '';
-    Object.keys(appData).forEach(catName => {
+    Object.keys(appData).forEach(catName => 
+    {
         const option = document.createElement('option');
         option.value = catName;
         option.textContent = catName;
@@ -48,15 +75,18 @@ function initCategories() {
     });
 }
 
-function changeCategory() {
+function changeCategory() 
+{
     currentCategory = categorySelect.value;
     currentIndex = 0;
     startMode(currentMode, document.querySelector('.tab.active'));
 }
 
-function addNewCategory() {
+function addNewCategory() 
+{
     const newCat = prompt("Új mappa neve:");
-    if (newCat && !appData[newCat]) {
+    if (newCat && !appData[newCat]) 
+    {
         appData[newCat] = [];
         saveData();
         initCategories();
@@ -67,25 +97,31 @@ function addNewCategory() {
 }
 
 // --- 3. JÁTÉKMOTOR ---
-function startMode(mode, btnElement) {
+
+function startMode(mode, btnElement) 
+{
     currentMode = mode;
     currentIndex = 0;
-    if(btnElement) {
+    if(btnElement) 
+    {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btnElement.classList.add('active');
     }
     renderGame();
 }
 
-function renderGame() {
+function renderGame() 
+{
     const cards = appData[currentCategory];
     updateProgress(cards ? cards.length : 0);
 
-    if (!cards || cards.length === 0) {
-        gameArea.innerHTML = `<div style="padding:40px; color:var(--text-muted);"><i class="fas fa-folder-open" style="font-size:3rem; margin-bottom:15px;"></i><h3>Üres mappa</h3><p>Használd a Szerkesztés gombot!</p></div>`;
+    if (!cards || cards.length === 0) 
+    {
+        gameArea.innerHTML = `<div style="padding:40px; color:var(--text-muted);"><i class="fas fa-folder-open" style="font-size:3rem; margin-bottom:15px;"></i><h3>Üres mappa</h3><p>Kattints a Szerkesztés gombra új kártyákhoz!</p></div>`;
         return;
     }
-    if (currentIndex >= cards.length) {
+    if (currentIndex >= cards.length) 
+    {
         gameArea.innerHTML = `<div style="padding:40px;"><h2 style="color:var(--primary);">Vége! 🎉</h2><button class="btn-primary" onclick="startMode('${currentMode}')">Újra</button></div>`;
         return;
     }
@@ -95,7 +131,8 @@ function renderGame() {
     else if (currentMode === 'typing') loadTyping(cards[currentIndex]);
 }
 
-function updateProgress(total) {
+function updateProgress(total) 
+{
     const bar = document.getElementById('progress-bar');
     const txt = document.getElementById('progress-text');
     let displayIdx = (currentIndex >= total) ? total : currentIndex + 1;
@@ -104,15 +141,19 @@ function updateProgress(total) {
     bar.style.width = total > 0 ? `${(displayIdx / total) * 100}%` : '0%';
 }
 
-function nextCard() {
+function nextCard() 
+{
     if (currentIndex < appData[currentCategory].length) { currentIndex++; renderGame(); }
 }
-function prevCard() {
+function prevCard() 
+{
     if (currentIndex > 0) { currentIndex--; renderGame(); }
 }
 
-// --- 4. HTML GENERÁLÓK ---
-function loadFlashcard(card) {
+// --- 4. HTML GENERÁLÁS (MODES) ---
+
+function loadFlashcard(card) 
+{
     gameArea.innerHTML = `
         <div class="scene"><div class="card" onclick="this.classList.toggle('is-flipped')">
             <div class="card-face">${card.frontImg ? `<img src="${card.frontImg}">` : ''}<h3>${card.frontText}</h3><p style="margin-top:auto; font-size:0.8rem; color:var(--text-muted);">(Kattints)</p></div>
@@ -124,9 +165,11 @@ function loadFlashcard(card) {
         </div>`;
 }
 
-function loadQuiz(card, allCards) {
+function loadQuiz(card, allCards) 
+{
     let opts = [card.backText];
-    while (opts.length < 4 && allCards.length >= 4) {
+    while (opts.length < 4 && allCards.length >= 4) 
+    {
         let rnd = allCards[Math.floor(Math.random()*allCards.length)].backText;
         if (!opts.includes(rnd)) opts.push(rnd);
     }
@@ -137,61 +180,93 @@ function loadQuiz(card, allCards) {
         <h3 style="text-align:center;">${card.frontText}</h3><div class="quiz-options">${btns}</div><div id="feedback" style="margin-top:15px; text-align:center; font-weight:bold; min-height:24px;"></div><button id="next-btn" class="btn-primary full-width" onclick="nextCard()" style="display:none;">Tovább</button></div>`;
 }
 
-function checkAnswer(btn, sel, corr) {
+function checkAnswer(btn, sel, corr) 
+{
     const fb = document.getElementById('feedback');
-    if (sel === corr) {
+    if (sel === corr) 
+    {
         btn.style.borderColor = "#28a745"; btn.style.backgroundColor = "rgba(40,167,69,0.1)";
         fb.innerHTML = "<span style='color:#28a745'>Helyes!</span>"; document.getElementById('next-btn').style.display = "block";
-    } else {
+    } 
+    else 
+    {
         btn.style.borderColor = "#dc3545"; btn.style.backgroundColor = "rgba(220,53,69,0.1)";
         fb.innerHTML = "<span style='color:#dc3545'>Nem jó!</span>";
     }
 }
 
-function loadTyping(card) {
+function loadTyping(card) 
+{
     gameArea.innerHTML = `<div class="quiz-container" style="text-align:center;">${card.frontImg?`<img src="${card.frontImg}" style="max-height:150px;">`:''}
         <h3>${card.frontText}</h3><input type="text" id="type-input" placeholder="Válasz..." style="width:80%; margin:15px 0; padding:10px;"><button class="btn-primary" onclick="checkType('${card.backText.replace(/'/g,"\\'")}')">Ellenőrzés</button>
         <div id="feedback" style="margin-top:15px; font-weight:bold;"></div><button id="next-btn" class="btn-primary" onclick="nextCard()" style="display:none; margin:10px auto;">Tovább</button></div>`;
 }
-function checkType(corr) {
+function checkType(corr) 
+{
     const inp = document.getElementById('type-input');
     const fb = document.getElementById('feedback');
-    if (inp.value.trim().toLowerCase() === corr.toLowerCase()) {
+    if (inp.value.trim().toLowerCase() === corr.toLowerCase()) 
+    {
         fb.innerHTML = "<span style='color:#28a745'>Helyes!</span>"; document.getElementById('next-btn').style.display="block";
-    } else { fb.innerHTML = `<span style='color:#dc3545'>Helyes válasz: ${corr}</span>`; document.getElementById('next-btn').style.display="block"; }
+    } 
+    else { fb.innerHTML = `<span style='color:#dc3545'>Helyes válasz: ${corr}</span>`; document.getElementById('next-btn').style.display="block"; }
 }
 
-// --- 5. SZERKESZTŐ & EXPORT/IMPORT ---
-function toggleEditor() {
+// --- 5. SZERKESZTŐ FUNKCIÓK ---
+
+function toggleEditor() 
+{
     const ol = document.getElementById('editor-overlay');
     ol.classList.toggle('hidden');
     if(!ol.classList.contains('hidden')) { document.getElementById('current-cat-name').textContent = currentCategory; renderList(); }
     else renderGame();
 }
 
-function renderList() {
+function renderList() 
+{
     const list = document.getElementById('card-list'); list.innerHTML = '';
-    (appData[currentCategory]||[]).forEach((c, i) => {
+    (appData[currentCategory]||[]).forEach((c, i) => 
+    {
         list.innerHTML += `<div class="card-list-item"><div class="card-info">${c.frontImg?`<img src="${c.frontImg}">`:''}<div><span>${c.frontText}</span><small>${c.backText}</small></div></div><button class="btn-icon" onclick="delCard(${i})" style="color:#dc3545"><i class="fas fa-trash-alt"></i></button></div>`;
     });
 }
 
-function saveNewCard() {
-    const fT=document.getElementById('new-front-text').value, fI=document.getElementById('new-front-img').value;
-    const bT=document.getElementById('new-back-text').value, bI=document.getElementById('new-back-img').value;
-    if(!fT && !fI) return alert("Kérdés hiányzik!"); if(!bT && !bI) return alert("Válasz hiányzik!");
+function saveNewCard() 
+{
+    const fT = document.getElementById('new-front-text').value;
+    const bT = document.getElementById('new-back-text').value;
+    
+    // Kép lehet feltöltött (DataURI) vagy sima URL
+    const fI = document.getElementById('new-front-img-data').value || document.getElementById('new-front-url').value;
+    const bI = document.getElementById('new-back-img-data').value || document.getElementById('new-back-url').value;
+
+    if(!fT && !fI) return alert("Kártya elejére (kérdés) kell valami!");
+    if(!bT && !bI) return alert("Kártya hátuljára (válasz) kell valami!");
+
     appData[currentCategory].push({frontText:fT, frontImg:fI, backText:bT, backImg:bI});
     saveData();
-    document.getElementById('new-front-text').value=''; document.getElementById('new-front-img').value='';
-    document.getElementById('new-back-text').value=''; document.getElementById('new-back-img').value='';
+    
+    // Reset inputs
+    document.getElementById('new-front-text').value=''; 
+    document.getElementById('new-front-url').value='';
+    document.getElementById('new-front-img-data').value='';
+    document.getElementById('preview-front').style.display='none';
+    
+    document.getElementById('new-back-text').value=''; 
+    document.getElementById('new-back-url').value='';
+    document.getElementById('new-back-img-data').value='';
+    document.getElementById('preview-back').style.display='none';
+    
     renderList();
 }
 
 function delCard(i) { if(confirm("Törlöd?")) { appData[currentCategory].splice(i,1); saveData(); renderList(); } }
-
 function saveData() { localStorage.setItem('myFlashcardsData', JSON.stringify(appData)); }
 
-function exportData() {
+// --- 6. IMPORT / EXPORT / KÉPFELDOLGOZÁS ---
+
+function exportData() 
+{
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData));
     const dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute("href", dataStr);
@@ -199,14 +274,18 @@ function exportData() {
     dlAnchorElem.click();
 }
 
-function importData(input) {
+function importData(input) 
+{
     const file = input.files[0];
     if(!file) return;
     const reader = new FileReader();
-    reader.onload = function(e) {
-        try {
+    reader.onload = function(e) 
+    {
+        try 
+        {
             const res = JSON.parse(e.target.result);
-            if(confirm("Ez felülírja a jelenlegi kártyáidat! Mehet?")) {
+            if(confirm("Ez felülírja a jelenlegi kártyáidat! Mehet?")) 
+            {
                 appData = res; saveData(); initCategories(); changeCategory(); renderList();
                 alert("Sikeres betöltés!");
             }
@@ -214,4 +293,46 @@ function importData(input) {
     };
     reader.readAsText(file);
     input.value = '';
+}
+
+// Kép átméretezése és Base64 konvertálása
+function processImage(input, hiddenInputId, previewId) 
+{
+    const file = input.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(event) 
+    {
+        const img = new Image();
+        img.onload = function() 
+        {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Max szélesség 600px
+            const maxWidth = 600;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > maxWidth) 
+            {
+                height *= maxWidth / width;
+                width = maxWidth;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            document.getElementById(hiddenInputId).value = dataUrl;
+            
+            const preview = document.getElementById(previewId);
+            preview.src = dataUrl;
+            preview.style.display = "block";
+        };
+        img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
 }

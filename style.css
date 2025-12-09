@@ -11,12 +11,12 @@
     --primary-hover: #8d6a46;
     --accent: #d4a373;
     --border: #dcd0c0;
-    --font-main: 'Georgia', 'Times New Roman', serif; /* Elegáns betűtípus */
+    --font-main: 'Georgia', 'Times New Roman', serif;
     --shadow: 0 4px 10px rgba(75, 63, 53, 0.1);
     --input-bg: #ffffff;
 }
 
-/* 2. Téma: Sötétkék (Éjszakai) - Ha be van kapcsolva */
+/* 2. Téma: Sötétkék (Éjszakai) */
 [data-theme="dark"] 
 {
     --bg: #0f172a;            /* Mély sötétkék */
@@ -28,7 +28,7 @@
     --primary-hover: #2563eb;
     --accent: #60a5fa;
     --border: #334155;
-    --font-main: 'Segoe UI', Tahoma, Verdana, sans-serif; /* Modern betűtípus */
+    --font-main: 'Segoe UI', Tahoma, Verdana, sans-serif;
     --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     --input-bg: #334155;
 }
@@ -43,7 +43,7 @@ body
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    transition: background-color 0.3s, color 0.3s; /* Finom átmenet váltáskor */
+    transition: background-color 0.3s, color 0.3s;
 }
 
 /* --- NAVBAR --- */
@@ -129,7 +129,7 @@ button { cursor: pointer; border: none; border-radius: 5px; font-weight: 600; tr
 .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); display: flex; justify-content: center; align-items: center; z-index: 1000; }
 .hidden { display: none; }
 
-.editor-modal { background: var(--card-bg); width: 90%; max-width: 700px; height: 85vh; border-radius: 10px; display: flex; flex-direction: column; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow); }
+.editor-modal { background: var(--card-bg); width: 90%; max-width: 700px; height: 90vh; border-radius: 10px; display: flex; flex-direction: column; color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow); }
 .editor-header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
 .close-btn { background: none; font-size: 2rem; color: var(--text-muted); padding: 0 10px; line-height: 1; }
 .close-btn:hover { color: var(--text); }
@@ -139,7 +139,7 @@ button { cursor: pointer; border: none; border-radius: 5px; font-weight: 600; tr
 .add-card-box h3 { margin-top: 0; color: var(--primary); }
 
 .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
-.input-row input { flex: 1; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--input-bg); color: var(--text); }
+.input-row input[type="text"] { padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--input-bg); color: var(--text); }
 
 .full-width { width: 100%; margin-top: 10px; }
 

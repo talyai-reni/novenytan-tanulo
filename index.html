@@ -11,15 +11,26 @@
     
     <nav class="navbar">
         <div class="logo"><i class="fas fa-leaf"></i> NövényTanuló</div>
+        
         <div class="nav-controls">
             <select id="category-select" onchange="changeCategory()"></select>
-            <button class="btn-icon" onclick="addNewCategory()" title="Új mappa"><i class="fas fa-folder-plus"></i></button>
-            <button class="btn-secondary" onclick="toggleEditor()"><i class="fas fa-pen"></i> Szerkesztés</button>
-            <button class="btn-icon theme-toggle" onclick="toggleTheme()" title="Téma váltása"><i class="fas fa-moon" id="theme-icon"></i></button>
+            
+            <button class="btn-icon" onclick="addNewCategory()" title="Új mappa">
+                <i class="fas fa-folder-plus"></i>
+            </button>
+            
+            <button class="btn-secondary" onclick="toggleEditor()">
+                <i class="fas fa-pen"></i> Szerkesztés
+            </button>
+
+            <button class="btn-icon theme-toggle" onclick="toggleTheme()" title="Téma váltása">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
         </div>
     </nav>
 
     <div class="container">
+        
         <div class="mode-tabs">
             <button class="tab active" onclick="startMode('flashcard', this)">Kártyák</button>
             <button class="tab" onclick="startMode('choice', this)">Feleletválasztós</button>
@@ -27,19 +38,23 @@
         </div>
 
         <div class="progress-info">
-            <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
             <div class="progress-text" id="progress-text">0 / 0</div>
         </div>
 
-        <main id="game-area"></main>
+        <main id="game-area">
+            </main>
 
         <div id="editor-overlay" class="overlay hidden">
             <div class="editor-modal">
                 <div class="editor-header">
                     <div style="display:flex; flex-direction:column; align-items:flex-start;">
-                        <h2><i class="fas fa-edit"></i> Kezelő</h2>
+                        <h2><i class="fas fa-edit"></i> Kártyák kezelése</h2>
                         <span id="current-cat-name" style="font-size:0.9rem; color:var(--text-muted);"></span>
                     </div>
+                    
                     <div style="display:flex; gap:10px; align-items:center;">
                         <button class="btn-secondary" onclick="exportData()" title="Mentés fájlba (Biztonsági mentés)">
                             <i class="fas fa-download"></i> Mentés
@@ -48,6 +63,7 @@
                             <i class="fas fa-upload"></i> Betöltés
                             <input type="file" id="import-file" style="display:none;" onchange="importData(this)">
                         </label>
+                        
                         <button onclick="toggleEditor()" class="close-btn" style="margin-left:10px;">&times;</button>
                     </div>
                 </div>
@@ -55,21 +71,44 @@
                 <div class="editor-body">
                     <div class="add-card-box">
                         <h3>Új kártya</h3>
-                        <div class="input-row">
-                            <input type="text" id="new-front-text" placeholder="Kártya eleje (Kérdés)">
-                            <input type="text" id="new-front-img" placeholder="Kép URL">
+                        
+                        <div class="input-row" style="flex-direction:column;">
+                            <input type="text" id="new-front-text" placeholder="Kártya eleje (Szöveg/Kérdés)" style="width:96%;">
+                            
+                            <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+                                <input type="hidden" id="new-front-img-data">
+                                <label class="btn-secondary" style="cursor:pointer; font-size:0.8rem; flex-shrink:0;">
+                                    <i class="fas fa-camera"></i> Fotó
+                                    <input type="file" accept="image/*" style="display:none;" onchange="processImage(this, 'new-front-img-data', 'preview-front')">
+                                </label>
+                                <input type="text" id="new-front-url" placeholder="Vagy kép URL..." style="flex:1; font-size:0.8rem;">
+                            </div>
+                            <img id="preview-front" style="max-height:60px; margin-top:5px; display:none; border-radius:4px; border:1px solid #ccc;">
                         </div>
-                        <div class="input-row">
-                            <input type="text" id="new-back-text" placeholder="Kártya hátulja (Válasz)">
-                            <input type="text" id="new-back-img" placeholder="Kép URL (opcionális)">
+
+                        <div class="input-row" style="flex-direction:column; margin-top:15px;">
+                            <input type="text" id="new-back-text" placeholder="Kártya hátulja (Válasz)" style="width:96%;">
+                            
+                            <div style="display:flex; gap:10px; align-items:center; margin-top:5px;">
+                                <input type="hidden" id="new-back-img-data">
+                                <label class="btn-secondary" style="cursor:pointer; font-size:0.8rem; flex-shrink:0;">
+                                    <i class="fas fa-camera"></i> Fotó
+                                    <input type="file" accept="image/*" style="display:none;" onchange="processImage(this, 'new-back-img-data', 'preview-back')">
+                                </label>
+                                <input type="text" id="new-back-url" placeholder="Vagy kép URL..." style="flex:1; font-size:0.8rem;">
+                            </div>
+                            <img id="preview-back" style="max-height:60px; margin-top:5px; display:none; border-radius:4px; border:1px solid #ccc;">
                         </div>
-                        <button class="btn-primary full-width" onclick="saveNewCard()">Hozzáadás a listához</button>
+
+                        <button class="btn-primary full-width" onclick="saveNewCard()" style="margin-top:15px;">Hozzáadás a listához</button>
                     </div>
+
                     <h3>Meglévő kártyák</h3>
                     <div id="card-list" class="card-list"></div>
                 </div>
             </div>
         </div>
+
     </div>
     <script src="script.js"></script>
 </body>
