@@ -104,24 +104,19 @@ const defaultData = {
 };
 
 // --- NAGYON FONTOS SOR: Ezzel kényszerítjük ki, hogy a fix kódot használja ---
-let appData = defaultData;
+let appData;
+    try {
+        // Megpróbáljuk betölteni a memóriát. Ha hibás, elkapjuk a hibát, és nem omlik össze az oldal!
+        appData = JSON.parse(localStorage.getItem('myFlashcardsData'));
+    } catch (e) {
+        appData = null; 
+    }
 
-let currentCategory = Object.keys(appData)[0];
-let currentIndex = 0;
-let currentMode = 'flashcard';
-let editingIndex = null;
-let gameCards = []; 
-
-const gameArea = document.getElementById('game-area');
-const categorySelect = document.getElementById('category-select');
-
-if (localStorage.getItem('theme') === 'dark') {
-    document.body.setAttribute('data-theme', 'dark');
-    document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
-}
-
- // --- NAGYON FONTOS SOR: Ezzel kényszerítjük ki, hogy a fix kódot használja ---
-let appData = defaultData;
+    // Ha üres a memória, vagy hiányzik belőle a vizsgalista, kényszerítjük a jó adatokat!
+    if (!appData || typeof appData !== 'object' || !appData["Gyomnövény felismerés (Vizsga)"]) {
+        appData = defaultData;
+        localStorage.setItem('myFlashcardsData', JSON.stringify(appData));
+    }
 
 let currentCategory = Object.keys(appData)[0];
 let currentIndex = 0;
